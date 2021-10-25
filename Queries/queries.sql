@@ -51,25 +51,38 @@ where c.party_id = p.party_id and p.coalition_id='coal_03_19';
 select * from coalition_id where election_id='el_ls_01';
 
 -- Get votes by constituency
-select voter_id, candidate_id.candidate_id
+select candidate.candidate_id, voter_id
 from voter
-full outer join candidate
+inner join candidate
 on voter.candidate_id = candidate.candidate_id
 where candidate.constituency_id='con_ls_001'
 
--- Find winning candidate for given constituency
-select candidate_id, count(voter_id) as num_votes from 
+-- Get votes by candidate per constituency
+select votes.candidate_id, count(votes.voter_id) as num_votes from 
 (
-    select voter_id, voter.candidate_id from voter
-    right outer join candidate on voter.candidate_id = candidate.candidate_id
-    where candidate_id.constituency_id='con_ls_001'
+    select candidate.candidate_id, voter_id
+    from voter
+    full outer join candidate
+    on voter.candidate_id = candidate.candidate_id
+    where candidate.constituency_id='con_ls_001'
 ) as votes
-group by candidate_id
+group by votes.candidate_id
 
--- Get votes by candidate
-select count(voter_id) from voter v
-where v.candidate_id='cand_001'; 
-
+-- Find winning candidate for given constituency
+select distinct on (counts.num_votes) candidate_id, num_votes
+from
+(
+    select votes.candidate_id, count(votes.voter_id) as num_votes from 
+    (
+        select candidate.candidate_id, voter_id
+        from voter
+        full outer join candidate
+        on voter.candidate_id = candidate.candidate_id
+        where candidate.constituency_id='con_ls_001'
+    ) as votes
+    group by votes.candidate_id
+) as counts
+order by counts.num_votes DESC;
 -- Find winning party for given state
 -- Find winning coalition in the state
 -- Find winning coalition in the lok sabha election
