@@ -20,8 +20,8 @@ insert into Constituency values ('con_ls_003','Lok Sabha','Mysore','Karnataka');
 
 
 
-insert into Election values ( 'el_ls_09','2009-05-25','Lok Sabha' ,'2009-05-20');
-insert into Election values ( 'el_st_12ka','2012-04-10','Karnataka- State Election','2012-04-13');
+insert into Election values ( 'ls_01','2009-05-25','ls' ,'2009-05-20');
+insert into Election values ( 'kar_01','2012-04-10','state','2012-04-13');
 
 
 insert into Coalition values ('coal_02_19','United Front','el_ls_09');
@@ -52,44 +52,44 @@ insert into Booth values ( 'bo_010_ka',2397, 'con_ls_003', 'officer_010');
 
 
 
-insert into Candidate values ('cand_001',47,'Surya Prasad','el_ls_09','par_001','con_ls_001');
-insert into Candidate values ('cand_002',58,'Mukesh Bhat','el_ls_09','par_005','con_ls_001');
-insert into Candidate values ('cand_003',45,'Linga Gowda','el_ls_09','par_001','con_ls_002');
-insert into Candidate values ('cand_004',61,'Somnath Pillai','el_ls_09','par_005','con_ls_002');
-insert into Candidate values ('cand_005',50,'Kiran Reddy','el_ls_09','par_001','con_ls_003');
-insert into Candidate values ('cand_006',49,'Kasturi Suresh','el_ls_09','par_005','con_ls_003');
-
+insert into Candidate values ('cand_001',47,'Surya Prasad','el_ls_09','par_001','con_ls_009');
+insert into Candidate values ('cand_002',58,'Mukesh Bhat','el_ls_09','par_002','con_ls_009');
+insert into Candidate values ('cand_003',45,'Linga Gowda','el_ls_09','par_003','con_ls_009');
+insert into Candidate values ('cand_004',61,'Somnath Pillai','el_ls_09','par_004','con_ls_009');
+insert into Candidate values ('cand_005',50,'Kiran Reddy','el_ls_09','par_005','con_st_002ka');
+insert into Candidate values ('cand_006',49,'Kasturi Suresh','el_ls_09','par_005','con_st_001ka');
 insert into Candidate values ('cand_007',56,'Rajesh Gowda','el_st_12ka','par_002','con_st_001ka');
-insert into Candidate values ('cand_008',44,'Pramukh Kumar','el_st_12ka','par_004','con_st_001ka');
+insert into Candidate values ('cand_008',44,'Pramukh Kumar','el_st_12ka','par_002','con_st_001ka');
 insert into Candidate values ('cand_009',63,'Sita Sethupathy','el_st_12ka','par_003','con_st_002ka');
-insert into Candidate values ('cand_010',56,'Mahesh Reddy','el_st_12ka','par_004','con_st_002ka');
+insert into Candidate values ('cand_010',56,'Mahesh Reddy','el_st_12ka','par_003','con_st_002ka');
 
 
-insert into voter values ('vot_001','2001-03-15','Karnataka','Rahul','Kumar','2nd cross,indiranagar',NULL,'con_ls_001','con_st_001ka');
-insert into voter values ('vot_002','2000-04-25','Karnataka','Rakesh','Singh','3nd cross,Kormanagala',NULL,'con_ls_002','con_st_002ka');
-insert into voter values ('vot_003','1983-01-10','Karnataka','Abdul','Rahman','2nd cross,MG Road',NULL,'con_ls_003','con_st_001ka');
-insert into voter values ('vot_004','2980-03-17','Karnataka','Veena','Kumari','17nd cross,Banashankari',NULL,'con_ls_001','con_st_002ka');
-insert into voter values ('vot_005','1976-02-27','Karnataka','Rani','Mukkerjee','12nd cross,indiranagar',NULL,'con_ls_002','con_st_001ka');
-insert into voter values ('vot_006','1977-06-22','Karnataka','Selena','Joseph','4th stage,BTM Layout',NULL,'con_ls_003','con_st_002ka');
-insert into voter values ('vot_007','2001-07-20','Karnataka','Rohan','George','2nd phase,JP nagar',NULL,'con_ls_001','con_st_001ka');
-insert into voter values ('vot_008','1960-08-11','Karnataka','Vignesh','Kamath','3nd block,Jayangar',NULL,'con_ls_002','con_st_002ka');
-insert into voter values ('vot_009','1999-09-16','Karnataka','Suresh','Kumar','5th phase,JP nagar',NULL,'con_ls_003','con_st_001ka');
-insert into voter values ('vot_010','1987-01-08','Karnataka','Vijay','Sarath','9th cross,Banashankari',NULL,'con_ls_001','con_st_002ka');
-insert into voter values ('vot_011','1981-02-01','Karnataka','Chitra','M','2nd cross,Bellendur',NULL,'con_ls_002','con_st_001ka');
-insert into voter values ('vot_012','1971-12-11','Karnataka','Suhas','T','13th Main,Bellendur',NULL,'con_ls_003','con_st_002ka');
+insert into Voter_kar_01 values ('vot_001','2001-03-15','Karnataka','Rahul','Kumar','2nd cross,indiranagar',NULL, NULL,'con_st_001ka');
+insert into Voter_kar_01 values ('vot_002','2000-04-25','Karnataka','Rakesh','Singh','3nd cross,Kormanagala',NULL, NULL,'con_st_002ka');
+insert into Voter_kar_01 values ('vot_003','1983-01-10','Karnataka','Abdul','Rahman','2nd cross,MG Road',NULL, NULL,'con_st_001ka');
+insert into Voter_kar_01 values ('vot_004','2980-03-17','Karnataka','Veena','Kumari','17nd cross,Banashankari',NULL, NULL,'con_st_002ka');
+insert into Voter_kar_01 values ('vot_005','1976-02-27','Karnataka','Rani','Mukkerjee','12nd cross,indiranagar',NULL, NULL,'con_st_001ka');
+insert into Voter_kar_01 values ('vot_006','1977-06-22','Karnataka','Selena','Joseph','4th stage,BTM Layout',NULL, NULL,'con_st_002ka');
+insert into Voter_kar_01 values ('vot_007','2001-07-20','Karnataka','Rohan','George','2nd phase,JP nagar',NULL, NULL,'con_st_001ka');
+insert into Voter_kar_01 values ('vot_008','1960-08-11','Karnataka','Vignesh','Kamath','3nd block,Jayangar',NULL, NULL,'con_st_002ka');
+insert into Voter_kar_01 values ('vot_009','1999-09-16','Karnataka','Suresh','Kumar','5th phase,JP nagar',NULL, NULL,'con_st_001ka');
+insert into Voter_kar_01 values ('vot_010','1987-01-08','Karnataka','Vijay','Sarath','9th cross,Banashankari',NULL, NULL,'con_st_002ka');
+insert into Voter_kar_01 values ('vot_011','1981-02-01','Karnataka','Chitra','M','2nd cross,Bellendur',NULL, NULL,'con_st_001ka');
+insert into Voter_kar_01 values ('vot_012','1971-12-11','Karnataka','Suhas','T','13th Main,Bellendur',NULL, NULL,'con_st_002ka');
 
-insert into voter values ('vot_013','2000-03-15','Karnataka','Kedar','Nath','2nd cross,indiranagar',NULL,'con_ls_001','con_st_001ka');
-insert into voter values ('vot_014','1984-04-25','Karnataka','Varun','Mohan','3nd cross,Kormanagala',NULL,'con_ls_002','con_st_002ka');
-insert into voter values ('vot_015','1988-01-10','Karnataka','Abdul','Raneem','2nd cross,MG Road',NULL,'con_ls_003','con_st_001ka');
-insert into voter values ('vot_016','2989-03-17','Karnataka','Raeesa','Tanseen','17nd cross,Banashankari',NULL,'con_ls_001','con_st_002ka');
-insert into voter values ('vot_017','1967-02-27','Karnataka','Shreya','Mukkerjee','12nd cross,indiranagar',NULL,'con_ls_002','con_st_001ka');
-insert into voter values ('vot_018','1994-12-22','Karnataka','Sachin','Dsouza','4th stage,BTM Layout',NULL,'con_ls_003','con_st_002ka');
-insert into voter values ('vot_019','2000-07-20','Karnataka','Shilpita','Reddy','2nd phase,JP nagar',NULL,'con_ls_001','con_st_001ka');
-insert into voter values ('vot_020','1990-02-11','Karnataka','Hari','Kamath','3nd block,Jayangar',NULL,'con_ls_002','con_st_002ka');
-insert into voter values ('vot_021','1993-11-16','Karnataka','Madhav','Sarath','5th phase,JP nagar',NULL,'con_ls_003','con_st_001ka');
-insert into voter values ('vot_022','1989-01-08','Karnataka','Lokesh','Kumar','9th cross,Banashankari',NULL,'con_ls_001','con_st_002ka');
-insert into voter values ('vot_023','1986-02-01','Karnataka','Zubeen','M','2nd cross,Bellendur',NULL,'con_ls_002','con_st_001ka');
-insert into voter values ('vot_024','1970-12-11','Karnataka','Sethu','Tilak','13th Main,Bellendur',NULL,'con_ls_003','con_st_002ka');
+
+insert into Voter_ls_01 values ('vot_013','2000-03-15','Karnataka','Kedar','Nath','2nd cross,indiranagar',NULL,'con_ls_009',NULL);
+insert into Voter_ls_01 values ('vot_014','1984-04-25','Karnataka','Varun','Mohan','3nd cross,Kormanagala',NULL,'con_ls_009',NULL);
+insert into Voter_ls_01 values ('vot_015','1988-01-10','Karnataka','Abdul','Raneem','2nd cross,MG Road',NULL,'con_ls_009',NULL);
+insert into Voter_ls_01 values ('vot_016','2989-03-17','Karnataka','Raeesa','Tanseen','17nd cross,Banashankari',NULL,'con_ls_009',NULL);
+insert into Voter_ls_01 values ('vot_017','1967-02-27','Karnataka','Shreya','Mukkerjee','12nd cross,indiranagar',NULL,'con_ls_009',NULL);
+insert into Voter_ls_01 values ('vot_018','1994-12-22','Karnataka','Sachin','Dsouza','4th stage,BTM Layout',NULL,'con_ls_009',NULL);
+insert into Voter_ls_01 values ('vot_019','2000-07-20','Karnataka','Shilpita','Reddy','2nd phase,JP nagar',NULL,'con_ls_009',NULL);
+insert into Voter_ls_01 values ('vot_020','1990-02-11','Karnataka','Hari','Kamath','3nd block,Jayangar',NULL,'con_ls_008',NULL);
+insert into Voter_ls_01 values ('vot_021','1993-11-16','Karnataka','Madhav','Sarath','5th phase,JP nagar',NULL,'con_ls_008',NULL);
+insert into Voter_ls_01 values ('vot_022','1989-01-08','Karnataka','Lokesh','Kumar','9th cross,Banashankari',NULL,'con_ls_008',NULL);
+insert into Voter_ls_01 values ('vot_023','1986-02-01','Karnataka','Zubeen','M','2nd cross,Bellendur',NULL,'con_ls_008',NULL);
+insert into Voter_ls_01 values ('vot_024','1970-12-11','Karnataka','Sethu','Tilak','13th Main,Bellendur',NULL,'con_ls_008',NULL);
 
 
 insert into PartyLeader values('cand_001','par_001');

@@ -1,22 +1,47 @@
+-- Values Used
+
+-- Election IDs:
+-- LS: ls_09
+-- State: st_12ka
+
+-- CONSTITUENCY
+-- ls: ls_09
+-- state: st_001ka, st_002ka 
+
+-- VOTERS: 
+-- state: 0-12 for 
+-- ls: 13-24
+
+
+
+
+
+
+
 -- ==================================
 -- SIMPLE QUERIES
 -- -----------------------------------
 
 
 -- Get voter list overall
-select * from voter ;
+select * from voter_ls_09;
 
 -- Cast vote
-update voter set candidate_id='cand_001' where voter_id='vot_001';
+update voter_ls_09 set candidate_id='cand_001' where voter_id='vot_001';
+update voter_st_12ka set candidate_id='cand_001' where voter_id='vot_013';
 
 -- Get Candidate list 
-select * from candidate where election_id='el_ls_01';
+select * from candidate where election_id='el_ls_09';
+select * from candidate where election_id='el_st_12ka';
 
 -- Get Candidate list for constituency
-select * from candidate where election_id='el_ls_01' and constituency_id='con_ls_001';
+select * from candidate where election_id='el_ls_09' and constituency_id='con_ls_009';
+select * from candidate where election_id='el_st_12ka' and constituency_id='con_st_001ka';
+select * from candidate where election_id='el_st_12ka' and constituency_id='con_st_002ka';
 
 -- List of all parties in election
-select * from party where election_id='el_ls_01';
+select * from party where election_id='el_ls_09';
+select * from party where election_id='el_st_12ka';
 
 -- Get candidates belonging to a party
 select * from candidate where party_id='par_001';
@@ -29,7 +54,7 @@ select * from candidate c, party p
 where c.party_id = p.party_id and p.coalition_id='coal_03_19';
 
 -- Get coalitions
-select * from coalition_id where election_id='el_ls_01';
+select * from coalition_id where election_id='el_ls_09';
 
 
 
@@ -138,3 +163,10 @@ grant insert, select, update, delete on voter to ero;
 grant insert, select, update, delete on candidate to ero;
 grant insert, select, update, delete on party to ero;
 grant insert, select, update, delete on coalition to ero;
+
+
+-- CONCURRENCY CONTROL
+
+-- Read committed 
+
+-- Transaction 1
