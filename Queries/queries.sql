@@ -24,37 +24,42 @@
 
 
 -- Get voter list overall
-select * from voter_ls_09;
+select * from voter_ls_01;
+
+-- Get voters list per constituency
+select voter_id, fname from voter_kar_01 where state_constituency_id='const_019kar';
 
 -- Cast vote
-update voter_ls_09 set candidate_id='cand_001' where voter_id='vot_001';
-update voter_st_12ka set candidate_id='cand_001' where voter_id='vot_013';
+update voter_kar_01 set candidate_id='cand_00001' where voter_id='vot_0000000001';
+update voter_ls_01 set candidate_id='cand_00002' where voter_id='vot_0000000006';
 
 -- Get Candidate list 
-select * from candidate where election_id='el_ls_09';
-select * from candidate where election_id='el_st_12ka';
+select * from candidate where election_id='ls_01';
+select * from candidate where election_id='kar_01';
 
 -- Get Candidate list for constituency
-select * from candidate where election_id='el_ls_09' and constituency_id='con_ls_009';
-select * from candidate where election_id='el_st_12ka' and constituency_id='con_st_001ka';
-select * from candidate where election_id='el_st_12ka' and constituency_id='con_st_002ka';
+select * from candidate where election_id='ls_01' and constituency_id='const_005mah';
+select * from candidate where election_id='kar_01' and constituency_id='const_019kar';
 
 -- List of all parties in election
-select * from party where election_id='el_ls_09';
-select * from party where election_id='el_st_12ka';
+select party_id, p.name from party p, coalition c
+where election_id='ls_01' and p.coalition_id=c.coalition_id;
+
+select party_id, p.name from party p, coalition c
+where election_id='kar_01' and p.coalition_id=c.coalition_id;
 
 -- Get candidates belonging to a party
 select * from candidate where party_id='par_001';
 
 -- Get parties by coalition
-select * from parties where coalition_id='coal_04_19';
+select * from party where coalition_id='coal_04';
 
 -- Get candidates by coalition
-select * from candidate c, party p
-where c.party_id = p.party_id and p.coalition_id='coal_03_19';
+select candidate_id, c.name, c.party_id, p.name, p.coalition_id  from candidate c, party p
+where c.party_id = p.party_id and p.coalition_id='coal_03';
 
 -- Get coalitions
-select * from coalition_id where election_id='el_ls_09';
+select * from coalition where election_id='ls_01';
 
 
 
@@ -64,19 +69,19 @@ select * from coalition_id where election_id='el_ls_09';
 
 -- Get votes by constituency
 select candidate.candidate_id, voter_id
-from voter
+from voter_kar_01 as voter
 inner join candidate
 on voter.candidate_id = candidate.candidate_id
-where candidate.constituency_id='con_ls_001'
+where candidate.constituency_id='const_019kar'
 
 -- Get votes by candidate per constituency
 select votes.candidate_id, count(votes.voter_id) as num_votes from 
 (
     select candidate.candidate_id, voter_id
-    from voter
+    from voter_kar_01 as voter
     full outer join candidate
     on voter.candidate_id = candidate.candidate_id
-    where candidate.constituency_id='con_ls_001'
+    where candidate.constituency_id='const_019kar'
 ) as votes
 group by votes.candidate_id
 
@@ -84,40 +89,46 @@ group by votes.candidate_id
 select votes.candidate_id, count(votes.voter_id) as num_votes from 
 (
     select candidate.candidate_id, voter_id
-    from voter
+    from voter_kar_01 as voter
     full outer join candidate
     on voter.candidate_id = candidate.candidate_id
-    where candidate.constituency_id='con_ls_001'
+    where candidate.constituency_id='const_019kar'
 ) as votes
 group by votes.candidate_id
 order by num_votes DESC
 limit 1;
 
--- Get voters list per constituency
-select * from voter
-where constituency_id in 
-    (
-        select constituency_id from constituency
-        where name='Mysore' and type='legislative'
-    );
-
-
 -- Get voter turnout
-select (count_cand*100.0) / (count_voter) as turnout
+select (count_cand*100.0) / (count_voter) as turnout_percentage
 from (
     select count(candidate_id) as count_cand, count(voter_id) as count_voter 
-    from voter
-    ) as counts;
+    from voter_kar_01
+) as counts;
 
 -- Voter turnout per LS constituency
-select (count_cand*100.0) / (count_voter) as turnout
+ select state_constituency_id, (count_cand*100.0) / (count_voter) as turnout_percentage
 from (
-    select count(candidate_id) as count_cand, count(voter_id) as count_voter 
-    from voter
-    group by constituency_id
-    ) as counts
-;
+     select state_constituency_id, count(candidate_id) as count_cand, count(voter_id) as count_voter
+     from voter_kar_01
+     group by state_constituency_id
+) as counts;
+
 -- Find winning party for given state
+-- select votes.candidate_id, count(votes.voter_id) as num_votes from 
+-- (
+--     select candidate.candidate_id, voter_id, voter.state_constituency_id
+--     from voter_kar_01 as voter
+--     full outer join candidate
+--     on voter.candidate_id = candidate.candidate_id
+--     where candidate.constituency_id in (
+--         select constituency_id from constituency where state='kar'
+--     )
+-- ) as votes
+-- group by candidate.constituency_id
+-- group by votes.candidate_id
+-- order by num_votes DESC
+-- limit 1;
+
 -- Find winning coalition in the state
 -- Find winning coalition in the lok sabha election
 
