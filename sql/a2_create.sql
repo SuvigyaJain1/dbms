@@ -8,7 +8,7 @@ create table Coalition(coalition_id varchar(20) primary key, name char(30), elec
 create table Candidate(candidate_id varchar(20) primary key, age int, name varchar(30) not null, election_id varchar(20) not null, party_id varchar(20), constituency_id varchar(20) not null);
 create table Constituency(constituency_id varchar(20) primary key, type char(20), name varchar(30), state char(30));
 create table PartyLeader(candidate_id varchar(20) primary key, party_id varchar(20) not null);
-create table Party(party_id varchar(20) primary key, symbol varchar(200), name varchar(30), coalition_id varchar(20));
+create table Party(party_id varchar(20) primary key, symbol varchar(200), name varchar , coalition_id varchar(20));
 create table Voter_ls_01(voter_id varchar(20) primary key, dob date, state char(30), fname char(20), lname char(20), address varchar(45), candidate_id varchar(20), constituency_id varchar(20) not null, state_constituency_id varchar(20));
 create table Voter_kar_01(voter_id varchar(20) primary key, dob date, state char(30), fname char(20), lname char(20), address varchar(45), candidate_id varchar(20), constituency_id varchar(20) , state_constituency_id varchar(20) not null);
 
