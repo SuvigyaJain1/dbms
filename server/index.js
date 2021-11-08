@@ -139,7 +139,7 @@ app.post("/constituency/create", async (req, res) => {
   app.post("/partyLeader/create", async (req, res) => {
     try {
       const { id } = req.body;
-      const { cid } = req.body;
+      const { pid } = req.body;
 
       //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const p_leader = await pool.query(
@@ -228,5 +228,71 @@ app.post("/constituency/create", async (req, res) => {
     }
   });
 
+/*------------- QUERIES SIMPLE----------------------------------------*/
 
-  
+//Get voter list overall
+app.get("/voters", async (req, res) => {
+  try {
+    const voters = await pool.query("SELECT * FROM voter_ls_01");
+    res.json(voters.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+
+//-- Get voters list per constituency
+
+app.get("/turnout/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const todo = await pool.query("select voter_id, fname from voter_kar_01 where state_constituency_id= $1", [cid]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//-- Cast vote
+app.put("/vote/:eid", async (req, res) => {
+  try {
+    const { id } = req.body;
+    const { eid } = req.params;
+    const { cid } = req.body;
+    console.log(id);console.log(eid);
+    const updateTodo = await pool.query(
+      "update "+ eid +" set candidate_id = $1 WHERE voter_id = $2",
+      [cid, id]
+    );
+
+    res.json("Vote was casted!");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//get candidate list
+app.get("/candidate/:eid", async (req, res) => {
+  try {
+    const { eid } = req.params;
+    const todo = await pool.query(" select * from candidate where election_id=$1", [eid]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Get Candidate list for constituency
+app.get("/candidate/:eid/:cid", async (req, res) => {
+  try {
+    const { eid } = req.params;
+    const { cid } = req.params;
+    const todo = await pool.query(" select * from candidate where election_id= $1 and constituency_id=$2", [eid,cid]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
