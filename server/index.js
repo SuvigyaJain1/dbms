@@ -255,14 +255,13 @@ app.get("/turnout/:cid", async (req, res) => {
 });
 
 //-- Cast vote
-app.put("/vote/:eid", async (req, res) => {
+app.post("/vote/:vlist", async (req, res) => {
   try {
     const { id } = req.body;
-    const { eid } = req.params;
+    const { vlist } = req.params;
     const { cid } = req.body;
-    console.log(id);console.log(eid);
     const updateTodo = await pool.query(
-      "update "+ eid +" set candidate_id = $1 WHERE voter_id = $2",
+      "update "+ vlist +" set candidate_id = $1 WHERE voter_id = $2",
       [cid, id]
     );
 
@@ -296,3 +295,139 @@ app.get("/candidate/:eid/:cid", async (req, res) => {
     console.error(err.message);
   }
 });
+
+//List of all parties in election
+app.get("/partyElection/:eid", async (req, res) => {
+  try {
+    const { eid } = req.params;
+    const todo = await pool.query(" select party_id, p.name from party p, coalition c where election_id=$1 and p.coalition_id=c.coalition_id", [eid]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Get candidates belonging to a party
+app.get("/candidateParty/:pid", async (req, res) => {
+  try {
+    const { pid } = req.params;
+    //console.log(pid);
+    const todo = await pool.query(" select * from candidate where party_id=$1", [pid]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Get parties by coalition
+app.get("/partyCoalition/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const todo = await pool.query(" select * from party where coalition_id=$1", [cid]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Get coalitions
+app.get("/Coalition/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const todo = await pool.query(" select * from coalition where election_id=$1", [cid]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//----------------COMPLEX QUERIES ------------------------------
+//needs to be tested from here
+
+//Get votes by constituency
+app.get("/votesConstituency/:vlist/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const{ vlist } = req.params;
+    const todo = await pool.query(" select candidate.candidate_id, voter_id from "+ vlist +" as voter inner join candidate on voter.candidate_id = candidate.candidate_id where candidate.constituency_id=$1", [cid]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Get votes by candidate per constituency
+app.get("/votesByCandidate/:eid/:cid", async (req, res) => {
+  try {
+    const { eid } = req.params;
+    const{ cid } = req.params;
+    const todo = await pool.query(" select votes.candidate_id, count(votes.voter_id) as num_votes from (select candidate.candidate_id, voter_id from "+ eid +" as voter full outer join candidate on voter.candidate_id = candidate.candidate_id where candidate.constituency_id=$1) as votes group by votes.candidate_id", [cid]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Find winning candidate for given constituency
+app.get("/winnerConstituency/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const { elec } = req.body;
+    const todo = await pool.query(" select votes.candidate_id, count(votes.voter_id) as num_votes from\
+   (\
+        select candidate.candidate_id, voter_id\
+        from "+elec+" as voter\
+        full outer join candidate\
+        on voter.candidate_id = candidate.candidate_id\
+        where candidate.constituency_id=$1\
+    ) as votes\
+    group by votes.candidate_id\
+    order by num_votes DESC\
+    limit 1;", [cid]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Get voter turnout
+app.get("/turnout/:vlist", async (req, res) => {
+  try {
+    const { vlist } = req.params;
+    const todo = await pool.query(" select (count_cand*100.0) / (count_voter) as turnout_percentage\
+    from (\
+        select count(candidate_id) as count_cand, count(voter_id) as count_voter\
+        from $1\
+    ) as counts",[vlist]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+//Voter turnout per State constituency
+app.get("/turnout/:vlist", async (req, res) => {
+  try {
+    const { vlist } = req.params;
+    const todo = await pool.query(" select state_constituency_id, (count_cand*100.0) / (count_voter) as turnout_percentage\
+    from (\
+         select state_constituency_id, count(candidate_id) as count_cand, count(voter_id) as count_voter\
+         from $1\
+         group by state_constituency_id\
+    ) as counts;", [vlist]);
+
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+
