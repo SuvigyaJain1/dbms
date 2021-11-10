@@ -17,17 +17,29 @@ app.post("/election/create", async (req, res) => {
       const { edate } = req.body;
       const { type } = req.body;
       const { sdate } = req.body;
-      //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const election = await pool.query(
-        "insert into Election (election_id ,end_date ,type ,start_date) values ( $1,$2,$3,$4) RETURNING *",
+        "insert into Election (election_id ,end_date ,type ,start_date) values ( $1,$2,$3,$4)",
         [id,edate,type,sdate]
       
       );
+      const voterlist = await pool.query(
+        "create table Voter_"+id+"(voter_id varchar(20) primary key, dob date, state char(30), fname char(20), lname char(20), address varchar(45), candidate_id varchar(20), constituency_id varchar(20) not null, state_constituency_id varchar(20))",
+      );
+      const c1 = await pool.query(
+        "alter table Voter_"+id+" add constraint voterfk1 foreign key(candidate_id) references Candidate(candidate_id)"
+      );
+      const c2 = await pool.query(
+        "alter table Voter_"+id+" add constraint voterfk2 foreign key(constituency_id) references Constituency(constituency_id)"
+      );
+      const c3 = await pool.query(
+        "alter table Voter_"+id+" add constraint voterfk3 foreign key(state_constituency_id) references Constituency(constituency_id)",
+      );
   
-      res.json(election.rows[0]);
+      res.json("New election and voter table made!");
     } catch (err) {
       console.error(err.message);
     }
+
   });
 
   //Create booths
@@ -37,19 +49,17 @@ app.post("/election/create", async (req, res) => {
       const { num } = req.body;
       const { cid } = req.body;
       const { oid } = req.body;
-      //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const booth = await pool.query(
-        "insert into Booth (booth_id, num_voters , constituency_id, officer_id) values ( $1,$2,$3,$4) RETURNING *",
+        "insert into Booth (booth_id, num_voters , constituency_id, officer_id) values ( $1,$2,$3,$4)",
         [id,num,cid,oid]
       
       );
   
-      res.json(booth.rows[0]);
+      res.json("Booth created successfully");
     } catch (err) {
       console.error(err.message);
     }
   });
-  //insert into Booth values ( 'booth_00002', 0, 'const_053ker', 'officer_00030');
 
   //create officers
   app.post("/officer/create", async (req, res) => {
@@ -58,14 +68,13 @@ app.post("/election/create", async (req, res) => {
       const { name } = req.body;
       const { pw } = req.body;
       const { des } = req.body;
-      //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const officer = await pool.query(
-        "insert into Officer (officer_id , name , passcode , designation) values ( $1,$2,$3,$4) RETURNING *",
+        "insert into Officer (officer_id , name , passcode , designation) values ( $1,$2,$3,$4)",
         [id,name,pw,des]
       
       );
   
-      res.json(officer.rows[0]);
+      res.json("New officer added successfully");
     } catch (err) {
       console.error(err.message);
     }
@@ -78,14 +87,13 @@ app.post("/constituency/create", async (req, res) => {
       const { type } = req.body;
       const { name } = req.body;
       const { state } = req.body;
-      //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const cons = await pool.query(
-        "insert into Constituency (constituency_id , type , name , state) values ( $1,$2,$3,$4) RETURNING *",
+        "insert into Constituency (constituency_id , type , name , state) values ( $1,$2,$3,$4)",
         [id,type,name,state]
       
       );
   
-      res.json(cons.rows[0]);
+      res.json("New constituency made successfully");
     } catch (err) {
       console.error(err.message);
     }
@@ -98,14 +106,13 @@ app.post("/constituency/create", async (req, res) => {
       const { name } = req.body;
       const { eid } = req.body;
 
-      //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const cons = await pool.query(
-        "insert into Coalition (coalition_id , name , election_id) values ( $1,$2,$3) RETURNING *",
+        "insert into Coalition (coalition_id , name , election_id) values ( $1,$2,$3)",
         [id,name,eid]
       
       );
   
-      res.json(cons.rows[0]);
+      res.json("New coalititon made successfully");
     } catch (err) {
       console.error(err.message);
     }
@@ -121,14 +128,13 @@ app.post("/constituency/create", async (req, res) => {
       const { pid } = req.body;
       const { cid } = req.body;
 
-      //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const cand = await pool.query(
-        "insert into Candidate (candidate_id, age ,name ,election_id ,party_id,constituency_id) values ( $1,$2,$3,$4,$5,$6) RETURNING *",
+        "insert into Candidate (candidate_id, age ,name ,election_id ,party_id,constituency_id) values ( $1,$2,$3,$4,$5,$6)",
         [id,age,name,eid,pid,cid]
       
       );
   
-      res.json(cand.rows[0]);
+      res.json("New candidate added successfully");
     } catch (err) {
       console.error(err.message);
     }
@@ -141,14 +147,13 @@ app.post("/constituency/create", async (req, res) => {
       const { id } = req.body;
       const { pid } = req.body;
 
-      //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const p_leader = await pool.query(
-        "insert into PartyLeader (candidate_id, party_id) values ( $1,$2) RETURNING *",
+        "insert into PartyLeader (candidate_id, party_id) values ( $1,$2)",
         [id,cid]
       
       );
   
-      res.json(p_leader.rows[0]);
+      res.json("New party leader added successfully");
     } catch (err) {
       console.error(err.message);
     }
@@ -161,21 +166,24 @@ app.post("/constituency/create", async (req, res) => {
       const { symbol } = req.body;
       const { name } = req.body;
       const { cid } = req.body;
-      //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const party = await pool.query(
-        "insert into Party (party_id , symbol , name, coalition_id) values ( $1,$2,$3,$4) RETURNING *",
+        "insert into Party (party_id , symbol , name, coalition_id) values ( $1,$2,$3,$4)",
         [id,symbol,name,cid]
       
       );
   
-      res.json(party.rows[0]);
+      res.json("New party created successfully");
     } catch (err) {
       console.error(err.message);
     }
   });
 
+
+  //REMEMBER TO MAKE PROVISION TO ADD NEW ELECTION TABLES FOR FUTURE ELECTIONS AND MAKE COMMON ROUTE FOR ALL THE VOTER INSERTS
+  //done!
+
   //insert ls voters
-  app.post("/lsVoter/create", async (req, res) => {
+  app.post("/voter/create/:eid", async (req, res) => {
     try {
       const { id } = req.body;
       const { dob } = req.body;
@@ -186,21 +194,21 @@ app.post("/constituency/create", async (req, res) => {
       const { cid } = req.body;
       const { conid } = req.body;
       const { sconid } = req.body;
+      const { eid } = req.params;
 
-
-      //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const lsvoter = await pool.query(
-        "insert into Voter_ls_01 (voter_id, dob , state, fname, lname, address, candidate_id, constituency_id, state_constituency_id) values ( $1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *",
+        "insert into Voter_"+eid+" (voter_id, dob , state, fname, lname, address, candidate_id, constituency_id, state_constituency_id) values ( $1,$2,$3,$4,$5,$6,$7,$8,$9)",
         [id,dob,state,fname,lname,address,cid,conid,sconid]
       
       );
   
-      res.json(lsvoter.rows[0]);
+      res.json("Voted added successfully");
     } catch (err) {
       console.error(err.message);
     }
   });
 
+  /* REDUNDANT NOW
   //insert state voters 
   app.post("/stVoter/create", async (req, res) => {
     try {
@@ -215,7 +223,6 @@ app.post("/constituency/create", async (req, res) => {
       const { sconid } = req.body;
 
 
-      //console.log(id);console.log(edate);console.log(type);console.log(sdate);
       const lsvoter = await pool.query(
         "insert into Voter_kar_01 (voter_id, dob , state, fname, lname, address, candidate_id, constituency_id, state_constituency_id) values ( $1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *",
         [id,dob,state,fname,lname,address,cid,conid,sconid]
@@ -227,13 +234,19 @@ app.post("/constituency/create", async (req, res) => {
       console.error(err.message);
     }
   });
+*/
+
+
+
 
 /*------------- QUERIES SIMPLE----------------------------------------*/
 
-//Get voter list overall
-app.get("/voters", async (req, res) => {
+//Get voter list overall for election
+//assumed insertion is done right
+app.get("/voter/getList/:vlist", async (req, res) => {
   try {
-    const voters = await pool.query("SELECT * FROM voter_ls_01");
+    const { vlist } = req.params;
+    const voters = await pool.query("SELECT * FROM "+vlist);
     res.json(voters.rows);
   } catch (err) {
     console.error(err.message);
@@ -241,12 +254,13 @@ app.get("/voters", async (req, res) => {
 });
 
 
-//-- Get voters list per constituency
+//-- Get voters list per constituency of ls or state
 
-app.get("/turnout/:cid", async (req, res) => {
+app.get("/voter/getList/:vlist/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
-    const todo = await pool.query("select voter_id, fname from voter_kar_01 where state_constituency_id= $1", [cid]);
+    const { vlist } = req.params;
+    const todo = await pool.query("select voter_id, fname from "+vlist+" where state_constituency_id= $1 or constituency_id=$2", [cid,cid]);
 
     res.json(todo.rows);
   } catch (err) {
@@ -255,24 +269,28 @@ app.get("/turnout/:cid", async (req, res) => {
 });
 
 //-- Cast vote
-app.post("/vote/:vlist", async (req, res) => {
+app.post("/voter/cast/:vlist", async (req, res) => {
   try {
     const { id } = req.body;
     const { vlist } = req.params;
     const { cid } = req.body;
-    const updateTodo = await pool.query(
-      "update "+ vlist +" set candidate_id = $1 WHERE voter_id = $2",
-      [cid, id]
+    const update = await pool.query(
+      "update "+ vlist +" set candidate_id = $1 WHERE voter_id = $2\
+       and candidate_id is null and\
+       (state_constituency_id=(select constituency_id from candidate where candidate_id=$3) or\
+       constituency_id=(select constituency_id from candidate where candidate_id=$4))",
+      [cid, id,cid,cid]
     );
-
+    if (update.rowCount)
     res.json("Vote was casted!");
+    else res.json("Sorry, you have either already voted or picked a candidate not contesting in your constituency.");
   } catch (err) {
     console.error(err.message);
   }
 });
 
 //get candidate list
-app.get("/candidate/:eid", async (req, res) => {
+app.get("/candidate/getList/:eid", async (req, res) => {
   try {
     const { eid } = req.params;
     const todo = await pool.query(" select * from candidate where election_id=$1", [eid]);
@@ -284,7 +302,7 @@ app.get("/candidate/:eid", async (req, res) => {
 });
 
 //Get Candidate list for constituency
-app.get("/candidate/:eid/:cid", async (req, res) => {
+app.get("/candidate/getList/:eid/:cid", async (req, res) => {
   try {
     const { eid } = req.params;
     const { cid } = req.params;
@@ -297,7 +315,7 @@ app.get("/candidate/:eid/:cid", async (req, res) => {
 });
 
 //List of all parties in election
-app.get("/partyElection/:eid", async (req, res) => {
+app.get("/party/getList/:eid", async (req, res) => {
   try {
     const { eid } = req.params;
     const todo = await pool.query(" select party_id, p.name from party p, coalition c where election_id=$1 and p.coalition_id=c.coalition_id", [eid]);
@@ -309,7 +327,7 @@ app.get("/partyElection/:eid", async (req, res) => {
 });
 
 //Get candidates belonging to a party
-app.get("/candidateParty/:pid", async (req, res) => {
+app.get("/candidate/inParty/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
     //console.log(pid);
@@ -322,7 +340,7 @@ app.get("/candidateParty/:pid", async (req, res) => {
 });
 
 //Get parties by coalition
-app.get("/partyCoalition/:cid", async (req, res) => {
+app.get("/coalition/getParty/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
     const todo = await pool.query(" select * from party where coalition_id=$1", [cid]);
@@ -334,10 +352,10 @@ app.get("/partyCoalition/:cid", async (req, res) => {
 });
 
 //Get coalitions
-app.get("/Coalition/:cid", async (req, res) => {
+app.get("/Coalition/getList/:eid", async (req, res) => {
   try {
-    const { cid } = req.params;
-    const todo = await pool.query(" select * from coalition where election_id=$1", [cid]);
+    const { eid } = req.params;
+    const todo = await pool.query(" select * from coalition where election_id=$1", [eid]);
 
     res.json(todo.rows);
   } catch (err) {
@@ -346,10 +364,9 @@ app.get("/Coalition/:cid", async (req, res) => {
 });
 
 //----------------COMPLEX QUERIES ------------------------------
-//needs to be tested from here
 
 //Get votes by constituency
-app.get("/votesConstituency/:vlist/:cid", async (req, res) => {
+app.get("/votes/constituency/:vlist/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
     const{ vlist } = req.params;
@@ -362,11 +379,11 @@ app.get("/votesConstituency/:vlist/:cid", async (req, res) => {
 });
 
 //Get votes by candidate per constituency
-app.get("/votesByCandidate/:eid/:cid", async (req, res) => {
+app.get("/votes/candidate/:vlist/:cid", async (req, res) => {
   try {
-    const { eid } = req.params;
+    const { vlist } = req.params;
     const{ cid } = req.params;
-    const todo = await pool.query(" select votes.candidate_id, count(votes.voter_id) as num_votes from (select candidate.candidate_id, voter_id from "+ eid +" as voter full outer join candidate on voter.candidate_id = candidate.candidate_id where candidate.constituency_id=$1) as votes group by votes.candidate_id", [cid]);
+    const todo = await pool.query(" select votes.candidate_id, count(votes.voter_id) as num_votes from (select candidate.candidate_id, voter_id from "+ vlist +" as voter full outer join candidate on voter.candidate_id = candidate.candidate_id where candidate.constituency_id=$1) as votes group by votes.candidate_id", [cid]);
 
     res.json(todo.rows);
   } catch (err) {
@@ -375,14 +392,14 @@ app.get("/votesByCandidate/:eid/:cid", async (req, res) => {
 });
 
 //Find winning candidate for given constituency
-app.get("/winnerConstituency/:cid", async (req, res) => {
+app.get("/winnerConstituency/:vlist/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
-    const { elec } = req.body;
+    const { vlist } = req.params;
     const todo = await pool.query(" select votes.candidate_id, count(votes.voter_id) as num_votes from\
    (\
         select candidate.candidate_id, voter_id\
-        from "+elec+" as voter\
+        from "+vlist+" as voter\
         full outer join candidate\
         on voter.candidate_id = candidate.candidate_id\
         where candidate.constituency_id=$1\
@@ -398,31 +415,30 @@ app.get("/winnerConstituency/:cid", async (req, res) => {
 });
 
 //Get voter turnout
-app.get("/turnout/:vlist", async (req, res) => {
+app.get("/turnout/all/:vlist", async (req, res) => {
   try {
     const { vlist } = req.params;
+    console.log("here");
     const todo = await pool.query(" select (count_cand*100.0) / (count_voter) as turnout_percentage\
     from (\
         select count(candidate_id) as count_cand, count(voter_id) as count_voter\
-        from $1\
-    ) as counts",[vlist]);
-
-    res.json(todo.rows);
+        from "+vlist+" ) as counts");
+    console.log(res)
+    //res.json(todo.rows);
   } catch (err) {
     console.error(err.message);
   }
 });
 
 //Voter turnout per State constituency
-app.get("/turnout/:vlist", async (req, res) => {
+app.get("/turnout/constituency/:vlist", async (req, res) => {
   try {
     const { vlist } = req.params;
     const todo = await pool.query(" select state_constituency_id, (count_cand*100.0) / (count_voter) as turnout_percentage\
     from (\
          select state_constituency_id, count(candidate_id) as count_cand, count(voter_id) as count_voter\
-         from $1\
-         group by state_constituency_id\
-    ) as counts;", [vlist]);
+         from "+vlist+" group by state_constituency_id\
+    ) as counts;");
 
     res.json(todo.rows);
   } catch (err) {
