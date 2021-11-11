@@ -98,8 +98,9 @@ const LayoutPage: React.o<SEOProps> = ({ children, ...rest }) => {
                 </Sidebar>
               )}
               <LayoutContent>
-                  <Layout className="cards">
-                    <Row>
+                  <Layout className="cards align-items-center">
+                    <Row className="align-items-center">
+                      <Col breakPoint={{sm:1, md:1}}></Col>
                       <Col breakPoint={{sm:10, md:5}}>
                         <Card>
                           <CardHeader>Ongoing Election details</CardHeader>
@@ -111,6 +112,7 @@ const LayoutPage: React.o<SEOProps> = ({ children, ...rest }) => {
                           </CardBody>
                         </Card>
                       </Col>
+
                       <Col breakPoint={{sm:10, md:5}}>
                         <Card>
                           <CardHeader>Custom Query</CardHeader>
@@ -124,6 +126,7 @@ const LayoutPage: React.o<SEOProps> = ({ children, ...rest }) => {
                       </Col>
                     </Row>
                     <Row>
+                    <Col breakPoint={{sm:1, md:1}}></Col>
                       <Col breakPoint={{xs:10, md:5}}>
                         <Card>
                           <CardHeader>Winning Party Details</CardHeader>
