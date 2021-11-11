@@ -7,24 +7,26 @@ import { SidebarBody, SidebarRefObject, Sidebar } from '@paljs/ui/Sidebar';
 import Header from './Header';
 import SimpleLayout from './SimpleLayout';
 import { useRouter } from 'next/router';
-import { EvaIcon } from '@paljs/ui/Icon';
-import { Button } from '@paljs/ui/Button';
 import { Menu, MenuRefObject } from '@paljs/ui/Menu';
 import Link from 'next/link';
 import menuItems from './menuItem';
 import SEO, { SEOProps } from 'components/SEO';
+import { Card, CardBody, CardHeader, CardFooter } from '@paljs/ui/Card';
+import Row from '@paljs/ui/Row';
+import Col from '@paljs/ui/Col';
+
 
 const getDefaultTheme = (): DefaultTheme['name'] => {
   if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
     return localStorage.getItem('theme') as DefaultTheme['name'];
   } else {
     const hours = new Date().getHours();
-    return hours > 6 && hours < 19 ? 'default' : 'dark';
+    return hours > 6 && hours < 19 ? 'corporate' : 'corporate';
   }
 };
 
-const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
-  const [theme, setTheme] = useState<DefaultTheme['name']>('default');
+const LayoutPage: React.o<SEOProps> = ({ children, ...rest }) => {
+  const [theme, setTheme] = useState<DefaultTheme['name']>('corporate');
   const [dir, setDir] = useState<'ltr' | 'rtl'>('ltr');
   const sidebarRef = useRef<SidebarRefObject>(null);
   const router = useRouter();
@@ -64,7 +66,6 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
           <Layout evaIcons={icons} dir={dir} className={!authLayout ? 'auth-layout' : ''}>
             {!authLayout 
             && (
-             // INSERT CUSTOM HEADER HERE
               <Header
                 dir={dir}
                 changeDir={changeDir}
@@ -83,21 +84,6 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
                   responsive
                   className="menu-sidebar"
                 >
-                  {/* {seeHeader && (
-                    <header>
-                      <Button
-                        size="Tiny"
-                        status="Primary"
-                        onClick={() => {
-                          setMenuState(!menuState);
-                          menuRef.current?.toggle();
-                        }}
-                        fullWidth
-                      >
-                        {menuState ? <EvaIcon name="arrow-circle-up" /> : <EvaIcon name="arrow-circle-down" />}
-                      </Button>
-                    </header>
-                  )} */}
                   <SidebarBody>
                     <Menu
                       nextJs
@@ -112,16 +98,63 @@ const LayoutPage: React.FC<SEOProps> = ({ children, ...rest }) => {
                 </Sidebar>
               )}
               <LayoutContent>
-                <LayoutColumns>
-                  <LayoutColumn className="main-content">{children}</LayoutColumn>
-                </LayoutColumns>
+                  <Layout className="cards">
+                    <Row>
+                      <Col breakPoint={{sm:10, md:5}}>
+                        <Card>
+                          <CardHeader>Ongoing Election details</CardHeader>
+                          <CardBody>
+                            Start: 12/12/12 <br/>
+                            End: 1/1/1 <br/>
+                            Type: Lok Sabha <br/> 
+                            States: Karnataka, Maharashtra, Kerala <br/> 
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col breakPoint={{sm:10, md:5}}>
+                        <Card>
+                          <CardHeader>Custom Query</CardHeader>
+                          <CardBody>
+                            Start: 12/12/12 <br/>
+                            End: 1/1/1 <br/>
+                            Type: Lok Sabha <br/> 
+                            States: Karnataka, Maharashtra, Kerala <br/> 
+                          </CardBody>
+                        </Card>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col breakPoint={{xs:10, md:5}}>
+                        <Card>
+                          <CardHeader>Winning Party Details</CardHeader>
+                          <CardBody>
+                            Start: 12/12/12 <br/>
+                            End: 1/1/1 <br/>
+                            Type: Lok Sabha <br/> 
+                            States: Karnataka, Maharashtra, Kerala <br/> 
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col breakPoint={{xs:10, md:5}}>
+                        <Card>
+                          <CardHeader>Voter Turnout details</CardHeader>
+                          <CardBody>
+                            Start: 12/12/12 <br/>
+                            End: 1/1/1 <br/>
+                            Type: Lok Sabha <br/> 
+                            States: Karnataka, Maharashtra, Kerala <br/> 
+                          </CardBody>
+                        </Card>
+                      </Col>
+                    </Row>
+                  </Layout>
                 {!authLayout && <LayoutFooter>Footer</LayoutFooter>}
               </LayoutContent>
             </LayoutContainer>
           </Layout>
         </Fragment>
       </ThemeProvider>
-    </Fragment>
+    </Fragment> 
   );
 };
 
