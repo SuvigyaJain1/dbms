@@ -448,11 +448,13 @@ app.get("/turnout/constituency/:vlist", async (req, res) => {
 
 app.get("/constituency/:eid", async (req, res)=>{
   const {eid} = req.params
+  console.log("Received request")
   try {
     let type = eid.split("_")[0]
     if(type == "ls") {
       const todo = await pool.query("select constituency_id from constituency where type='ls';")
       res.json(todo.rows)
+      console.log(todo.rows)
     } else {
       const todo = await pool.query(`select constituency_id from constituency where type='st' and state='${type}';`)
       res.json(todo.rows)
