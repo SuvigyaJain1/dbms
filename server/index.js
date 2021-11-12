@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const pool = require("./db");
 
-// app.use(cors());
+app.use(cors());
 app.use(express.json());
 
 app.listen(5000,()=>{
@@ -330,7 +330,6 @@ app.get("/party/getList/:eid", async (req, res) => {
 app.get("/candidate/inParty/:pid", async (req, res) => {
   try {
     const { pid } = req.params;
-    //console.log(pid);
     const todo = await pool.query(" select * from candidate where party_id=$1", [pid]);
 
     res.json(todo.rows);
@@ -418,13 +417,11 @@ app.get("/winnerConstituency/:vlist/:cid", async (req, res) => {
 app.get("/turnout/all/:vlist", async (req, res) => {
   try {
     const { vlist } = req.params;
-    console.log("here");
     const todo = await pool.query(" select (count_cand*100.0) / (count_voter) as turnout_percentage\
     from (\
         select count(candidate_id) as count_cand, count(voter_id) as count_voter\
         from "+vlist+" ) as counts");
-    console.log(res)
-    //res.json(todo.rows);
+    res.json(todo.rows);
   } catch (err) {
     console.error(err.message);
   }
@@ -448,13 +445,11 @@ app.get("/turnout/constituency/:vlist", async (req, res) => {
 
 app.get("/constituency/:eid", async (req, res)=>{
   const {eid} = req.params
-  console.log("Received request")
   try {
     let type = eid.split("_")[0]
     if(type == "ls") {
       const todo = await pool.query("select constituency_id from constituency where type='ls';")
       res.json(todo.rows)
-      console.log(todo.rows)
     } else {
       const todo = await pool.query(`select constituency_id from constituency where type='st' and state='${type}';`)
       res.json(todo.rows)
@@ -462,5 +457,16 @@ app.get("/constituency/:eid", async (req, res)=>{
   } catch(err){
     console.error(err.message)
     res.json({"Err": "Failed"})
+  }
+})
+
+app.post("/get_candidates_party", async (req, res) => {
+  try {
+    let {candidates} = req.body
+    const todo = await pool.query(`select candidate_id, party_id from candidate where candidate_id in ('${candidates.join("','")}')`)
+    res.json(todo.rows)
+  }
+  catch (err) {
+    res.json({"Err":err.message})
   }
 })
