@@ -470,3 +470,14 @@ app.post("/get_candidates_party", async (req, res) => {
     res.json({"Err":err.message})
   }
 })
+
+
+app.get("/elections", async (req, res) => {
+  try {
+    const todo = await pool.query(`select * from election order by end_date desc`)
+    res.json(todo.rows)
+  }
+  catch (err) {
+    res.json({"Err":err.message})
+  }
+})
