@@ -446,4 +446,15 @@ app.get("/turnout/constituency/:vlist", async (req, res) => {
   }
 });
 
+app.get("/constituency/:eid", async (req, res)=>{
+  //ls_01
+  const {eid} = req.params
+  try {
+    let type = eid.split("_")
+    if(type == "ls") {
+      
+    } else {
 
+    }
+  }
+})
