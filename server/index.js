@@ -447,14 +447,18 @@ app.get("/turnout/constituency/:vlist", async (req, res) => {
 });
 
 app.get("/constituency/:eid", async (req, res)=>{
-  //ls_01
   const {eid} = req.params
   try {
-    let type = eid.split("_")
+    let type = eid.split("_")[0]
     if(type == "ls") {
-      
+      const todo = await pool.query("select constituency_id from constituency where type='ls';")
+      res.json(todo.rows)
     } else {
-
+      const todo = await pool.query(`select constituency_id from constituency where type='st' and state='${type}';`)
+      res.json(todo.rows)
     }
+  } catch(err){
+    console.error(err.message)
+    res.json({"Err": "Failed"})
   }
 })
