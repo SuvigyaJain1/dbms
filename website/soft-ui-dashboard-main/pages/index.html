@@ -6,10 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <style>
+
+    .bar-chart{
+      background-color:coral;
+      width: 25%;
+    }
+
+    .card{
+      flex-grow: 1;
+    }
+
+    .stat{
+      margin: 2px;
+      padding: 1px;
+    }
+  </style>
   <title>
     Home | Electotal
   </title>
-  <!--     Fonts and icons     -->
+      <!-- Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
   <!-- Nucleo Icons -->
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
@@ -142,19 +158,47 @@
           <div class="container">
             <div class = "row">
               <div class="col">
-                <div class="card">Card1</div>
+                <div class="card">
+                  <p><b>Voter Turnout</b></p>
+                  <p>
+                    <div class="stat">Election: <label id="election_name">Karnataka 2021</label> <br> </div>
+                    <div class="stat">Turnout(%): <label id="election_name">50%</label> <br> </div>
+                    <div class="stat">Votes cast: <label id="election_name">1232231</label> <br> </div>
+                  </p>                  
+                </div>
               </div>
               <div class="col">
-                <div class="card">Card2</div>
+                <div class="card">
+                  <p><b>About Election</b></p>
+                  <p>
+                    <div class="stat">Election: <label id="election_name">Karnataka 2021</label> <br> </div>
+                    <div class="stat">Start: <label id="election_name">12/12/12</label> <br> </div>
+                    <div class="stat">End: <label id="election_name">12/12/12</label> <br> </div>
+                  </p>                  
+                </div>
               </div>              
             </div>
             <div class = "row">
               <div class="col">
-                <div class="card">Card3</div>
-              </div>
+                <div class="card">
+                  <p><b>Votes</b></p>
+                  <p>
+                    <div class="bar-chart stat" value="10">BJP: <label id="election_name">431122</label> <br> </div>
+                    <div class="bar-chart stat">INC: <label id="election_name">324321</label> <br> </div>
+                    <div class="bar-chart stat">AAP: <label id="election_name">123211</label> <br> </div>
+                  </p>                  
+                </div>  
+              </div>        
               <div class="col">
-                <div class="card">Card4</div>
-              </div>              
+                <div class="card">
+                  <p><b>Voter Turnout</b></p>
+                  <p>
+                    <div class="stat">Election: <label id="election_name">Karnataka 2021</label> <br> </div>
+                    <div class="stat">Turnout(%): <label id="election_name">50%</label> <br> </div>
+                    <div class="stat">Votes cast: <label id="election_name">1232231</label> <br> </div>
+                  </p>                  
+                </div>   
+              </div>          
             </div>
           </div>
         </div>
