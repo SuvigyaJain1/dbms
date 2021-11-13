@@ -13,8 +13,22 @@ function getStateTurnout() {
     .then(res => res.json()).then(res => console.log(res))
 }
 
+
 function getElectionDetails() {
-    // Get Election latest election details
+    fetch('http://localhost:5000/elections')
+    .then(res=>res.json()).then(res=> {
+        console.log(res)
+        let name = ""
+        let id = res[0].election_id.split("_")[0]
+        if(id == "ls") {
+            name = "Lok Sabha"
+        } else {
+            name = `State Election: ${id.toUpperCase()}`
+        }
+        document.getElementById("e_name").innerHTML = name
+        document.getElementById("e_start").innerHTML = res[0].start_date.split("T")[0]
+        document.getElementById("e_end").innerHTML = res[0].end_date.split("T")[0]
+    })
 }
 
 function getSeatsPerParty() {
