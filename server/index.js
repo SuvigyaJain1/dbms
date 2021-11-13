@@ -395,6 +395,7 @@ app.get("/winnerConstituency/:vlist/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
     const { vlist } = req.params;
+    console.log(cid, vlist)
     const todo = await pool.query(" select votes.candidate_id, count(votes.voter_id) as num_votes from\
    (\
         select candidate.candidate_id, voter_id\
@@ -406,7 +407,7 @@ app.get("/winnerConstituency/:vlist/:cid", async (req, res) => {
     group by votes.candidate_id\
     order by num_votes DESC\
     limit 1;", [cid]);
-
+    console.log(todo.rows)
     res.json(todo.rows);
   } catch (err) {
     console.error(err.message);
@@ -464,7 +465,6 @@ app.post("/get_candidates_party", async (req, res) => {
   try {
     let {candidates} = req.body
     const todo = await pool.query(`select c.candidate_id, p.party_id, p.name from candidate c, party p where candidate_id in ('${candidates.join("','")}') and c.party_id = p.party_id`)
-    console.log(todo.rows)
     res.json(todo.rows)
   }
   catch (err) {

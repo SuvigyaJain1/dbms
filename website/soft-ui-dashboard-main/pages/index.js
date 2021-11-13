@@ -32,52 +32,58 @@ function getElectionDetails() {
     })
 }
 
-function getSeatsPerParty() {
-    const e_id = 'kar_01'
-    
-    fetch(`http://localhost:5000/constituency/${e_id}`)
-    .then(res => res.json())
-    .then(data => {
-        return new Promise((resolve, reject)=>{
-            tally = {}
-            data.map(constituency => {
-                const_id = constituency.constituency_id;
-                fetch(`http://localhost:5000/winnerConstituency/voter_${e_id}/${const_id}`)
-                .then(res => res.json())
-                .then(winner => {
-                    return winner[0].candidate_id;
-                })
-                .then((cids) => {
-                    axios.post('http://localhost:5000/get_candidates_party', {candidates:[cids]})
-                    .then(res => {
-                        const pid = res.data[0].name
-                        if(tally.hasOwnProperty(pid)) tally[pid] += 1
-                        else tally[pid] = 1
-                    })
-                })
-            })
-            resolve(tally)
-        })
-    }).then(tally=>{
-        console.log(tally)
-        temp = Object.keys(tally)
-        temp.sort((a, b)=>{
-            return tally[b]-tally[a]
-        })
-        document.getElementById("p1").innerHTML = `${temp[0]}: ${tally[temp[0]]}`
-        document.getElementById("p2").innerHTML = `${temp[1]}: ${tally[temp[1]]}`
-        document.getElementById("p3").innerHTML = `${temp[2]}: ${tally[temp[2]]}`
+function getConstituencies(data) {
+    let res = []
+    data.map(d=>{
+        res.push(d.constituency_id)
     })
+    return res
 }
 
+async function getSeatsPerParty(e_id) {
+    let response = await fetch(`http://localhost:5000/constituency/${e_id}`)
+    let constituencies = await response.json()
+    let cids = constituencies.map(c=>c.constituency_id)
+    let winners = await Promise.all(cids.map(async (cid) =>{
+        const res = await fetch(`http://localhost:5000/winnerConstituency/voter_${e_id}/${cid}`)
+        const winner = await res.json()
+        return winner[0]
+    }))
+    let winner_ids = winners.map(winner=>{
+        if(winner == undefined) return "n/a"
+        return winner.candidate_id
+    })
+    response = await axios.post('http://localhost:5000/get_candidates_party', {candidates:winner_ids})
+    parties = response.data
+    tally = {}
+    
+    parties.forEach(e=>{
+        if(e.name in tally) {
+            tally[e.name] += 1
+        } else {
+            tally[e.name] = 1;
+        }
+    })
+    
+    countSortedKeys = Object.keys(tally).sort((a, b)=>{
+        return tally[b] - tally[a]
+    })
+    
+    let top3 = []
+    for(var i = 0; i<3; i++) {
+        pname = countSortedKeys[i]
+        seats = tally[pname]
+        top3.push([pname, seats])
+    }
 
+    return top3
+}
 
-window.onload = () => {
-    wrapper()
-};
-
-
-function wrapper() {
+window.onload = ()=>{
     getElectionDetails()
-    getSeatsPerParty()
+    getSeatsPerParty("ls_01").then(top=>{
+        document.getElementById("p1").innerHTML = `${top[0][0]}: ${top[0][1]}`
+        document.getElementById("p2").innerHTML = `${top[1][0]}: ${top[1][1]}`
+        document.getElementById("p3").innerHTML = `${top[2][0]}: ${top[2][1]}`
+    })
 }
