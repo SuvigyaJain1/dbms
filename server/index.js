@@ -463,7 +463,8 @@ app.get("/constituency/:eid", async (req, res)=>{
 app.post("/get_candidates_party", async (req, res) => {
   try {
     let {candidates} = req.body
-    const todo = await pool.query(`select candidate_id, party_id from candidate where candidate_id in ('${candidates.join("','")}')`)
+    const todo = await pool.query(`select c.candidate_id, p.party_id, p.name from candidate c, party p where candidate_id in ('${candidates.join("','")}') and c.party_id = p.party_id`)
+    console.log(todo.rows)
     res.json(todo.rows)
   }
   catch (err) {
