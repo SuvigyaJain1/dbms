@@ -11,6 +11,9 @@ create table PartyLeader(candidate_id varchar(20) primary key, party_id varchar(
 create table Party(party_id varchar(20) primary key, symbol varchar(200), name varchar , coalition_id varchar(20));
 create table Voter_ls_01(voter_id varchar(20) primary key, dob date, state char(30), fname char(20), lname char(20), address varchar(45), candidate_id varchar(20), constituency_id varchar(20) not null, state_constituency_id varchar(20));
 create table Voter_kar_01(voter_id varchar(20) primary key, dob date, state char(30), fname char(20), lname char(20), address varchar(45), candidate_id varchar(20), constituency_id varchar(20) , state_constituency_id varchar(20) not null);
+create table Voter_ker_01(voter_id varchar(20) primary key, dob date, state char(30), fname char(20), lname char(20), address varchar(45), candidate_id varchar(20), constituency_id varchar(20) , state_constituency_id varchar(20) not null);
+create table Voter_mah_01(voter_id varchar(20) primary key, dob date, state char(30), fname char(20), lname char(20), address varchar(45), candidate_id varchar(20), constituency_id varchar(20) , state_constituency_id varchar(20) not null);
+create table Voter_tam_01(voter_id varchar(20) primary key, dob date, state char(30), fname char(20), lname char(20), address varchar(45), candidate_id varchar(20), constituency_id varchar(20) , state_constituency_id varchar(20) not null);
 
 alter table Booth add constraint boothfk1 foreign key(constituency_id) references Constituency(constituency_id);
 alter table Booth add constraint boothfk2 foreign key(officer_id) references Officer(officer_id);

@@ -1,3 +1,4 @@
+# python generate.py
 sudo -u postgres psql -f ./a2_create.sql
 sudo -u postgres psql -f ./officer.sql
 sudo -u postgres psql -f ./const.sql

@@ -25,7 +25,7 @@ class Generator:
     def __init__(self):
         self.const_files = ['karnataka.txt',  'kerala.txt',  'maharashtra.txt', 'tamil_nadu.txt']
         self.name_file = 'names.txt'
-        self.e_ids = ['ls_01', 'kar_01']
+        self.e_ids = ['ls_01', 'kar_01', 'mah_01', 'ker_01', 'tam_01']
         self.coalitions = ['coal_001', 'coal_002', 'coal_003', 'coal_004', 'coal_005', None]
         self.parties = ['par_001','par_002','par_003','par_004','par_005','par_006','par_007','par_008','par_009','par_010','par_011','par_012','par_013','par_014','par_015','par_016','par_017','par_018','par_019','par_020']
         self.name_states = {}
@@ -137,12 +137,11 @@ class Generator:
             print("\c electoral_db", file=f)
             for _ in range(n):
                 voter_id=f"{pk}{cur_id:010d}"
-                age=random.randint(18, 100)
                 name =random.sample(self.names, 2)
                 e_id = random.choice(self.e_ids)
                 dob = f"{random.randint(1950,2000)}-{random.randint(1,12)}-{random.randint(1,28)}" 
 
-                const_id = random.choice(random.choice(list(self.constituency_ids.values())))
+                const_id = random.choice(self.constituency_ids[e_id.split('_')[0]])
                 state = const_id[-3:]
 
                 if e_id[:2]!='ls':

@@ -480,3 +480,18 @@ app.get("/elections", async (req, res) => {
     res.json({"Err":err.message})
   }
 })
+
+app.post("/get_parties_coalition", async (req, res) => {
+  try{
+    let {parties} = req.body
+    const todo = await pool.query(`select c.coalition_id, p.party_id, c.name as coalition_name
+    from party p, coalition c where c.coalition_id = p.coalition_id 
+    and p.name in ('${parties.join("','")}')`)
+    res.json(todo.rows)
+  }
+  catch (err) {
+    res.json({
+      Err: err.message
+    })
+  }
+})
