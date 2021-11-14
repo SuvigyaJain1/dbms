@@ -1,0 +1,14 @@
+.bar-chart{
+    background-color:coral;
+    width: 25%;
+  }
+
+  .card{
+    flex-grow: 1;
+    min-height: 97%;
+  }
+
+  .stat{
+    margin: 2px;
+    padding: 1px;
+  }
