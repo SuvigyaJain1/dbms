@@ -16,8 +16,8 @@ function getStateTurnout() {
 }
 
 
-function getElectionDetails() {
-    fetch('http://localhost:5000/elections')
+async function getElectionDetails() {
+    const data = await fetch('http://localhost:5000/elections')
     .then(res=>res.json()).then(res=> {
         let name = ""
         let id = res[0].election_id.split("_")[0]
@@ -29,7 +29,9 @@ function getElectionDetails() {
         document.getElementById("e_name").innerHTML = name
         document.getElementById("e_start").innerHTML = res[0].start_date.split("T")[0]
         document.getElementById("e_end").innerHTML = res[0].end_date.split("T")[0]
+        return res[0].election_id
     })
+    return data 
 }
 
 function getConstituencies(data) {
@@ -80,15 +82,15 @@ async function getSeatsPerParty(e_id) {
 }
 
 window.onload = ()=>{
-    getElectionDetails()
-    getSeatsPerParty("kar_01").then(top=>{
-        total = top[0][1] + top [1][1] + top [2][1];
-        document.getElementsByClassName("bar-chart")[0].style.width = `${20 + top[0][1]/total * 100}%`
-        document.getElementsByClassName("bar-chart")[1].style.width = `${20 + top[1][1]/total * 100}%`
-        document.getElementsByClassName("bar-chart")[2].style.width = `${20 + top[2][1]/total * 100}%`
-        console.log(`${top[2][0]/total * 100}%`)
+    getElectionDetails().then(eid => {
+        getSeatsPerParty(eid).then(top=>{
+            total = top[0][1] + top [1][1] + top [2][1];
+            document.getElementsByClassName("bar-chart")[0].style.width = `${top[0][1]/total * 100}%`
+        document.getElementsByClassName("bar-chart")[1].style.width = `${top[1][1]/total * 100}%`
+        document.getElementsByClassName("bar-chart")[2].style.width = `${top[2][1]/total * 100}%`
         document.getElementById("p1").innerHTML = `${top[0][0]}: ${top[0][1]}`
         document.getElementById("p2").innerHTML = `${top[1][0]}: ${top[1][1]}`
         document.getElementById("p3").innerHTML = `${top[2][0]}: ${top[2][1]}`
+        })
     })
 }
