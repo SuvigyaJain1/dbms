@@ -12,7 +12,7 @@ app.listen(5000,()=>{
 
 //create a new election
 app.post("/election/create", async (req, res) => {
-    try {
+    try {  
       const { id } = req.body;
       const { edate } = req.body;
       const { type } = req.body;
@@ -35,6 +35,9 @@ app.post("/election/create", async (req, res) => {
         "alter table Voter_"+id+" add constraint voterfk3 foreign key(state_constituency_id) references Constituency(constituency_id)",
       );
   
+      const tableentry = await pool.query(
+        "insert into Lastid (table_name) values (Voter_"+id+")",
+      );
       res.json("New election and voter table made!");
     } catch (err) {
       console.error(err.message);
@@ -45,10 +48,21 @@ app.post("/election/create", async (req, res) => {
   //Create booths
   app.post("/booth/create", async (req, res) => {
     try {
-      const { id } = req.body;
+      const lid= await pool.query(
+        "select last_id from Lastid where table_name = 'Booth'"
+      );
+      let nu=Number((lid.rows[0]['last_id']).substring(7,11));
+      nu=nu+1;
+      nu=String(nu);
+      let zeros= "0".repeat(5-nu.length);
+      const id = 'booth_'+zeros+nu;
       const { num } = req.body;
       const { cid } = req.body;
       const { oid } = req.body;
+      let lid2= await pool.query(
+        "update Lastid set last_id= $1 where table_name = 'Booth'",[id]
+      );
+      console.log("done");
       const booth = await pool.query(
         "insert into Booth (booth_id, num_voters , constituency_id, officer_id) values ( $1,$2,$3,$4)",
         [id,num,cid,oid]
@@ -64,10 +78,20 @@ app.post("/election/create", async (req, res) => {
   //create officers
   app.post("/officer/create", async (req, res) => {
     try {
-      const { id } = req.body;
+      const lid= await pool.query(
+        "select last_id from Lastid where table_name = 'Officer'"
+      );
+      let nu=Number((lid.rows[0]['last_id']).substring(9,13));
+      nu=nu+1;
+      nu=String(nu);
+      let zeros= "0".repeat(5-nu.length);
+      const id = 'officer_'+zeros+nu;
       const { name } = req.body;
       const { pw } = req.body;
       const { des } = req.body;
+      const lid2= await pool.query(
+        "update Lastid set last_id= $1 where table_name = 'Officer'",[id]
+      );
       const officer = await pool.query(
         "insert into Officer (officer_id , name , passcode , designation) values ( $1,$2,$3,$4)",
         [id,name,pw,des]
@@ -83,10 +107,20 @@ app.post("/election/create", async (req, res) => {
 //create constituency
 app.post("/constituency/create", async (req, res) => {
     try {
-      const { id } = req.body;
+      const lid= await pool.query(
+        "select last_id from Lastid where table_name = 'Constituency'"
+      );
+      let nu=Number((lid.rows[0]['last_id']).substring(7,9));
+      nu=nu+1;
+      nu=String(nu);
+      let zeros= "0".repeat(3-nu.length);
       const { type } = req.body;
       const { name } = req.body;
       const { state } = req.body;
+      const id = 'const_'+zeros+nu+state;
+      const lid2= await pool.query(
+        "update Lastid set last_id= $1 where table_name = 'Constituency'",[id]
+      );
       const cons = await pool.query(
         "insert into Constituency (constituency_id , type , name , state) values ( $1,$2,$3,$4)",
         [id,type,name,state]
@@ -102,10 +136,19 @@ app.post("/constituency/create", async (req, res) => {
   //create coalition
   app.post("/coalition/create", async (req, res) => {
     try {
-      const { id } = req.body;
+      const lid= await pool.query(
+        "select last_id from Lastid where table_name = 'Coalition'"
+      );
+      let nu=Number((lid.rows[0]['last_id']).substring(6,7));
+      nu=nu+1;
+      nu=String(nu);
+      let zeros= "0".repeat(2-nu.length);
+      const id = 'coal_'+zeros+nu;
       const { name } = req.body;
       const { eid } = req.body;
-
+      const lid2= await pool.query(
+        "update Lastid set last_id= $1 where table_name = 'Coalition'",[id]
+      );
       const cons = await pool.query(
         "insert into Coalition (coalition_id , name , election_id) values ( $1,$2,$3)",
         [id,name,eid]
@@ -121,13 +164,22 @@ app.post("/constituency/create", async (req, res) => {
   //insert candidates
   app.post("/candidate/create", async (req, res) => {
     try {
-      const { id } = req.body;
+      const lid= await pool.query(
+        "select last_id from Lastid where table_name = 'Candidate'"
+      );
+      let nu=Number((lid.rows[0]['last_id']).substring(6,10));
+      nu=nu+1;
+      nu=String(nu);
+      let zeros= "0".repeat(5-nu.length);
+      const id = 'cand_'+zeros+nu;
       const { age } = req.body;
       const { name } = req.body;
       const { eid } = req.body;
       const { pid } = req.body;
       const { cid } = req.body;
-
+      const lid2= await pool.query(
+        "update Lastid set last_id= $1 where table_name = 'Candidate'",[id]
+      );
       const cand = await pool.query(
         "insert into Candidate (candidate_id, age ,name ,election_id ,party_id,constituency_id) values ( $1,$2,$3,$4,$5,$6)",
         [id,age,name,eid,pid,cid]
@@ -144,12 +196,12 @@ app.post("/constituency/create", async (req, res) => {
   //party leader insert
   app.post("/partyLeader/create", async (req, res) => {
     try {
-      const { id } = req.body;
+      
+      const { cid } = req.body;
       const { pid } = req.body;
-
       const p_leader = await pool.query(
         "insert into PartyLeader (candidate_id, party_id) values ( $1,$2)",
-        [id,cid]
+        [cid,pid]
       
       );
   
@@ -162,10 +214,20 @@ app.post("/constituency/create", async (req, res) => {
   //insert party
   app.post("/party/create", async (req, res) => {
     try {
-      const { id } = req.body;
+      const lid= await pool.query(
+        "select last_id from Lastid where table_name = 'Party'"
+      );
+      let nu=Number((lid.rows[0]['last_id']).substring(5,7));
+      nu=nu+1;
+      nu=String(nu);
+      let zeros= "0".repeat(3-nu.length);
+      const id = 'par_'+zeros+nu;
       const { symbol } = req.body;
       const { name } = req.body;
       const { cid } = req.body;
+      const lid2= await pool.query(
+        "update Lastid set last_id= $1 where table_name = 'Party'",[id]
+      );
       const party = await pool.query(
         "insert into Party (party_id , symbol , name, coalition_id) values ( $1,$2,$3,$4)",
         [id,symbol,name,cid]
@@ -185,7 +247,14 @@ app.post("/constituency/create", async (req, res) => {
   //insert ls voters
   app.post("/voter/create/:eid", async (req, res) => {
     try {
-      const { id } = req.body;
+      const lid= await pool.query(
+        "select last_id from Lastid where table_name =Voter_"+eid
+      );
+      let nu=Number((lid.rows[0]['last_id']).substring(5,14));
+      nu=nu+1;
+      nu=String(nu);
+      let zeros= "0".repeat(10-nu.length);
+      const id = 'booth_'+zeros+nu;
       const { dob } = req.body;
       const { state } = req.body;
       const { fname } = req.body;
@@ -195,7 +264,9 @@ app.post("/constituency/create", async (req, res) => {
       const { conid } = req.body;
       const { sconid } = req.body;
       const { eid } = req.params;
-
+      const lid2= await pool.query(
+        "update Lastid set last_id= $1 where table_name = Voter_"+eid,[id]
+      );
       const lsvoter = await pool.query(
         "insert into Voter_"+eid+" (voter_id, dob , state, fname, lname, address, candidate_id, constituency_id, state_constituency_id) values ( $1,$2,$3,$4,$5,$6,$7,$8,$9)",
         [id,dob,state,fname,lname,address,cid,conid,sconid]
