@@ -377,6 +377,7 @@ app.get("/candidate/getList/:eid/:cid", async (req, res) => {
   try {
     const { eid } = req.params;
     const { cid } = req.params;
+    console.log(eid, cid)
     const todo = await pool.query(" select * from candidate where election_id= $1 and constituency_id=$2", [eid,cid]);
 
     res.json(todo.rows);
@@ -512,6 +513,16 @@ app.get("/turnout/constituency/:vlist", async (req, res) => {
     console.error(err.message);
   }
 });
+
+app.get("/getConst/:vlist/:vid", async (req, res) => {
+  try {
+    const {vlist, vid} = req.params
+    const todo = await pool.query(`select constituency_id from ${vlist} where voter_id = '${vid}'`)
+    res.json(todo.rows)
+  } catch (err) {
+    console.log(err)
+  }
+})
 
 app.get("/constituency/:eid", async (req, res)=>{
   const {eid} = req.params
