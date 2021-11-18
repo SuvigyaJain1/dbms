@@ -484,6 +484,16 @@ app.get("/winnerConstituency/:vlist/:cid", async (req, res) => {
   }
 });
 
+app.get('/getparty/:pid', async (req, res)=>{
+  try {
+    const { pid } = req.params;
+    const todo = await pool.query(`select name from party where party_id='${pid}'`);
+    res.json(todo.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+})
+
 //Get voter turnout
 app.get("/turnout/all/:vlist", async (req, res) => {
   try {

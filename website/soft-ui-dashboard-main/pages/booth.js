@@ -14,18 +14,49 @@ async function getConstVoter(eid, vid) {
     return data
 }
 
+async function printCandidate(candidate) {
+    let {candidate_id, name, party_id} = candidate
+    let res = await fetch(`http://localhost:5000/getparty/${party_id}`)
+    res = await res.json()
+    party = res[0].name
+    return `<td>
+    <div class="d-flex px-2 py-1">
+        <div>
+        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user1">
+        </div>
+        <div class="d-flex flex-column justify-content-center">
+        <h6 class="mb-0 text-sm">${name}</h6>
+        </div>
+    </div>
+    </td>
+    <td>
+    <p class="text-xs font-weight-bold mb-0">${candidate_id}</p>
+    </td>
+    <td class="align-middle text-center">
+    <span class="text-secondary text-xs font-weight-bold">${party}</span>
+    </td>
+    <td class="align-middle text-center text-sm">
+    <button type='radio' class="badge badge-sm bg-gradient-success">Vote</button>
+    </td>`
+} 
 
 window.onload = ()=>{
     getElectionDetails()
     .then(eid=>{
         getConstVoter(eid, localStorage.getItem("vid"))
         .then(cid=>{
-            console.log(cid)
-            console.log(cid[0].constituency_id)
             fetch(`http://localhost:5000/candidate/getList/${eid}/${cid[0].constituency_id}`)
             .then(res=>res.json())
-            .then(data=>{
-                console.log(data)
+            .then(candidates=>{
+                let parent = document.getElementById("cand-table")
+                candidates.forEach(candidate=>{
+                    printCandidate(candidate)
+                    .then(str=>{
+                        child = document.createElement("tr")
+                        child.innerHTML = str
+                        parent.appendChild(child)
+                    })
+                })
             })
         })
     })
