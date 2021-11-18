@@ -96,7 +96,6 @@ class Generator:
         cur_id = start_id
         seen = {}
         self.candidates=[]
-        parties = random.choices(self.parties, k=n)
         
         # print(self.constituency_ids)
         with open('candidates.sql', 'w') as f:
@@ -152,8 +151,13 @@ class Generator:
 
 g = Generator()
 
-g.generateOfficers(40, "officer_", 1)
-g.generateConstituency(60, 'const_', 1)
-g.generateBooth(40, 'booth_', 1)
-g.generateCandidate(100, "cand_", 1)
+print("Generating Officers...")
+g.generateOfficers(20, "officer_", 1)
+print("Generating Constituencies.....")
+g.generateConstituency(30, 'const_', 1)
+print("Generating Booths.....")
+g.generateBooth(20, 'booth_', 1)
+print("Generating Candidates...")
+g.generateCandidate(150, "cand_", 1)
+print("Generating Voters......")
 g.generateVoter(500, "vot_", 1)
