@@ -13,7 +13,7 @@ function getLsTurnout(e_id) {
         res.forEach(consti => {
             turnout += consti.turnout_percentage
         })
-        document.getElementById('t_turnout').innerHTML = `${turnout/count * 100}`
+        document.getElementById('t_turnout').innerHTML = `${turnout/count}`
     })
 }
 
@@ -43,6 +43,7 @@ async function getElectionDetails() {
         document.getElementById("e_name").innerHTML = name
         document.getElementById("e_start").innerHTML = res[0].start_date.split("T")[0]
         document.getElementById("e_end").innerHTML = res[0].end_date.split("T")[0]
+        document.getElementById("t_name").innerHTML = name
         return res[0].election_id
     })
     return data 

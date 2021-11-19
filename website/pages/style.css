@@ -24,3 +24,7 @@ div.card{
   border-radius: 0.5em;
   padding: 0;
 }
+
+.badge{
+  background-image:  linear-gradient(310deg, #f53939 0%, #fd5c70 100%) !important;
+}

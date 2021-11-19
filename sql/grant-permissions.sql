@@ -8,6 +8,7 @@ create user ero with password 'ero';
 grant insert, select, update, delete on election to ec;
 grant select on all tables in schema public to ec;
 grant insert, select, update, delete on constituency to ec;
+grant all on all tables in schema public to ec;
 
 grant select, update on voter_ls_01 to booth;
 grant select on candidate to booth;
