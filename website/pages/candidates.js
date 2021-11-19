@@ -1,7 +1,3 @@
-document.onload(() => {
-
-})
-
 submit = (ev) => {
     const name = document.getElementById('c_name').value
     const age = document.getElementById('c_age').value
@@ -13,5 +9,8 @@ submit = (ev) => {
     }
     axios.post('http://localhost:5000/candidate/create', payload)
     .then(res => res.data)
-    .then(res => alert(`Registered New candidate with id: ${res.id}`))
+    .then(res => {
+        console.log(res)
+        alert(`Registered new candidate with id - ${res.id}`)
+    })
 }

@@ -185,8 +185,7 @@ app.post("/constituency/create", async (req, res) => {
         [id,age,name,eid,pid,cid]
       
       );
-  
-      res.json("New candidate added successfully");
+      res.json({id:id});
     } catch (err) {
       console.error(err.message);
     }
@@ -204,7 +203,6 @@ app.post("/constituency/create", async (req, res) => {
         [cid,pid]
       
       );
-  
       res.json("New party leader added successfully");
     } catch (err) {
       console.error(err.message);
