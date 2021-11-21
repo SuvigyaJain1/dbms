@@ -220,7 +220,7 @@ app.post("/constituency/create", async (req, res) => {
   //insert party
   app.post("/party/create", async (req, res) => {
     try {
-      const lid= await pool.query(
+      let lid= await pool.query(
         "select last_id from Lastid where table_name = 'party'"
       );
       let nu=Number((lid.rows[0]['last_id']).substring(5,7));
@@ -230,21 +230,43 @@ app.post("/constituency/create", async (req, res) => {
       const id = 'par_'+zeros+nu;
       const { symbol } = req.body;
       const { name } = req.body;
-      const { cid } = req.body;
-      // const lid2= await pool.query(
-      //   "update Lastid set last_id= $1 where table_name = 'Party'",[id]
-      // );
+      let { cid } = req.body;
+      const {eid} = req.body
+      
+      lid= await pool.query(
+        "select last_id from Lastid where table_name = 'coalition'"
+      );
+      let last_id = lid.rows[0]['last_id']
+      
+      console.log(cid, symbol, name, eid)
+      if(cid == null) {
+        cid = 'coal_'+String(Number(last_id.split("_")[1])+1)
+        await pool.query(`insert into coalition values ('${cid}', '${name}', '${eid}')`)
+      }
+
       const party = await pool.query(
         "insert into Party (party_id , symbol , name, coalition_id) values ( $1,$2,$3,$4)",
         [id,symbol,name,cid]
-      
       );
-  
-      res.json("New party created successfully");
+    
+      res.json({id:id});
     } catch (err) {
       console.error(err.message);
     }
   });
+
+  app.get("/coalition/:cid", async (req, res) => {
+    try {
+      const { cid } = req.params;
+      const todo = await pool.query(
+        `select name from coalition where coalition_id='${cid}'`
+      );
+      res.json(todo.rows);
+    } catch (err) {
+      console.error(err.message);
+    }
+  });
+
 
   
 
@@ -408,7 +430,7 @@ app.get("/candidate/getList/:eid/:cid", async (req, res) => {
 app.get("/party/getList/:eid", async (req, res) => {
   try {
     const { eid } = req.params;
-    const todo = await pool.query(" select party_id, p.name from party p, coalition c where election_id=$1 and p.coalition_id=c.coalition_id", [eid]);
+    const todo = await pool.query(" select party_id, p.name, p.coalition_id from party p, coalition c where election_id=$1 and p.coalition_id=c.coalition_id", [eid]);
 
     res.json(todo.rows);
   } catch (err) {
