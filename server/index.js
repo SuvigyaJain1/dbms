@@ -374,7 +374,7 @@ app.get("/candidate/getList/:eid/:cid", async (req, res) => {
     const { eid } = req.params;
     const { cid } = req.params;
     console.log(eid, cid)
-    const todo = await pool.query(" select * from candidate where election_id= $1 and constituency_id=$2", [eid,cid]);
+    const todo = await pool.query(" select * from candidate where election_id= $1 and constituency_id LIKE $2", [eid,cid]);
 
     res.json(todo.rows);
   } catch (err) {

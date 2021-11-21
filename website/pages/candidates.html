@@ -142,8 +142,8 @@
     <main class="main-content  mt-0">
         <section>
           <div class="page-header min-vh-75">
-            <div class="container">
-              <div class="col-md-6 col-sm-10 form-col">
+            <div class="container row">
+              <div class="col-md-4 col-sm-10 form-col">
                 <div class="card form-card form-outline">
                   <input class="form-control" type="text" id="c_name" placeholder="Name">            
                   <input class="form-control" type="text" id="c_age" placeholder="Age">
@@ -154,6 +154,30 @@
                   <label class="form-label" for="c_pid">Party </label>
                   <input class="form-control" type="options" id="c_pid"><br>
                   <button class='btn btn-primary btn-block' onclick="submit()">CREATE</button>
+                </div>
+              </div>
+              <div class="gutter col-md-1"></div>
+              <div class="table-responsive p-0 col-md-6 col-sm-10 align-self-begin">
+                <div class="row form-col card">
+                  <input class="col-md-5 form-control" id="cid" type="text" placeholder="Constituency">
+                  <input class="col-md-5 form-control" id="eid" type="text" placeholder="Election ID">
+                  <button class="col-md-10 btn btn-primary btn-block" onclick="onGetCandList()">
+                    Get Candidates List
+                  </button>
+                </div>
+                <div class="row table-wrapper-scroll-y">
+                  <table class="table align-items-center mb-0">
+                    <thead>
+                      <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Candidate Name</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Candidate ID</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Party</th>
+                        <th class="text-secondary opacity-7"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="cand-table">
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>

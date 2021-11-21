@@ -14,4 +14,18 @@
     /* position: absolute; */
     align-self: center;
     z-index: 3;
+    /* height: 80%; */
+  }
+
+  .table-wrapper-scroll-y{
+    scroll-behavior: smooth;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 300px;
+    
+    /* width: 600px; */
+  }
+
+  .table-responsive{
+    margin-top: 5% !important;
   }
