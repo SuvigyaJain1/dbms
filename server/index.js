@@ -36,15 +36,25 @@ app.post("/election/create", async (req, res) => {
       );
   
       const tableentry = await pool.query(
-        "insert into Lastid (table_name) values (Voter_"+id+")",
+        `insert into Lastid values ('voter_${id}', 'vot_0000000000')`,
       );
-      res.json("New election and voter table made!");
+      res.json({id:id});
     } catch (err) {
       console.error(err.message);
     }
 
   });
 
+  app.get('/election', async (req, res) => {
+    try{
+      const elections = await pool.query('select * from election')
+      res.json(elections.rows)
+    }
+    catch (err) {
+      console.log(err.message)
+      res.json(err)
+    }
+  })
   //Create booths
   app.post("/booth/create", async (req, res) => {
     try {
