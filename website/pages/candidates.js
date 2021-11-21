@@ -14,3 +14,4 @@ submit = (ev) => {
         alert(`Registered new candidate with id - ${res.id}`)
     })
 }
+

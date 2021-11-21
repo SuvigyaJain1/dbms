@@ -137,7 +137,7 @@ app.post("/constituency/create", async (req, res) => {
   app.post("/coalition/create", async (req, res) => {
     try {
       const lid= await pool.query(
-        "select last_id from Lastid where table_name = 'Coalition'"
+        "select last_id from Lastid where table_name = 'coalition'"
       );
       let nu=Number((lid.rows[0]['last_id']).substring(6,7));
       nu=nu+1;
@@ -146,9 +146,9 @@ app.post("/constituency/create", async (req, res) => {
       const id = 'coal_'+zeros+nu;
       const { name } = req.body;
       const { eid } = req.body;
-      const lid2= await pool.query(
-        "update Lastid set last_id= $1 where table_name = 'Coalition'",[id]
-      );
+      // const lid2= await pool.query(
+      //   "update Lastid set last_id= $1 where table_name = 'Coalition'",[id]
+      // );
       const cons = await pool.query(
         "insert into Coalition (coalition_id , name , election_id) values ( $1,$2,$3)",
         [id,name,eid]
@@ -165,7 +165,7 @@ app.post("/constituency/create", async (req, res) => {
   app.post("/candidate/create", async (req, res) => {
     try {
       const lid= await pool.query(
-        "select last_id from Lastid where table_name = 'Candidate'"
+        "select last_id from Lastid where table_name = 'candidate'"
       );
       let nu=Number((lid.rows[0]['last_id']).substring(6,10));
       nu=nu+1;
@@ -177,13 +177,12 @@ app.post("/constituency/create", async (req, res) => {
       const { eid } = req.body;
       const { pid } = req.body;
       const { cid } = req.body;
-      const lid2= await pool.query(
-        "update Lastid set last_id= $1 where table_name = 'Candidate'",[id]
-      );
+      // const lid2= await pool.query(
+      //   "update Lastid set last_id= $1 where table_name = 'candidate'",[id]
+      // );
       const cand = await pool.query(
         "insert into Candidate (candidate_id, age ,name ,election_id ,party_id,constituency_id) values ( $1,$2,$3,$4,$5,$6)",
         [id,age,name,eid,pid,cid]
-      
       );
       res.json({id:id});
     } catch (err) {
@@ -201,7 +200,6 @@ app.post("/constituency/create", async (req, res) => {
       const p_leader = await pool.query(
         "insert into PartyLeader (candidate_id, party_id) values ( $1,$2)",
         [cid,pid]
-      
       );
       res.json("New party leader added successfully");
     } catch (err) {
@@ -213,7 +211,7 @@ app.post("/constituency/create", async (req, res) => {
   app.post("/party/create", async (req, res) => {
     try {
       const lid= await pool.query(
-        "select last_id from Lastid where table_name = 'Party'"
+        "select last_id from Lastid where table_name = 'party'"
       );
       let nu=Number((lid.rows[0]['last_id']).substring(5,7));
       nu=nu+1;
@@ -223,9 +221,9 @@ app.post("/constituency/create", async (req, res) => {
       const { symbol } = req.body;
       const { name } = req.body;
       const { cid } = req.body;
-      const lid2= await pool.query(
-        "update Lastid set last_id= $1 where table_name = 'Party'",[id]
-      );
+      // const lid2= await pool.query(
+      //   "update Lastid set last_id= $1 where table_name = 'Party'",[id]
+      // );
       const party = await pool.query(
         "insert into Party (party_id , symbol , name, coalition_id) values ( $1,$2,$3,$4)",
         [id,symbol,name,cid]
@@ -246,7 +244,7 @@ app.post("/constituency/create", async (req, res) => {
   app.post("/voter/create/:eid", async (req, res) => {
     try {
       const lid= await pool.query(
-        "select last_id from Lastid where table_name =Voter_"+eid
+        "select last_id from Lastid where table_name =voter_"+eid
       );
       let nu=Number((lid.rows[0]['last_id']).substring(5,14));
       nu=nu+1;
@@ -262,9 +260,9 @@ app.post("/constituency/create", async (req, res) => {
       const { conid } = req.body;
       const { sconid } = req.body;
       const { eid } = req.params;
-      const lid2= await pool.query(
-        "update Lastid set last_id= $1 where table_name = Voter_"+eid,[id]
-      );
+      // const lid2= await pool.query(
+      //   "update Lastid set last_id= $1 where table_name = Voter_"+eid,[id]
+      // );
       const lsvoter = await pool.query(
         "insert into Voter_"+eid+" (voter_id, dob , state, fname, lname, address, candidate_id, constituency_id, state_constituency_id) values ( $1,$2,$3,$4,$5,$6,$7,$8,$9)",
         [id,dob,state,fname,lname,address,cid,conid,sconid]
