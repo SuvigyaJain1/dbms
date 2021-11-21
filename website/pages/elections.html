@@ -19,6 +19,7 @@
   <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/soft-ui-dashboard.css?v=1.0.3" rel="stylesheet" />
+  <link rel="stylesheet" href="candidates.css">
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -139,9 +140,56 @@
     <main class="main-content  mt-0">
         <section>
           <div class="page-header min-vh-75">
-            <div class="container">
+              <div class="container row">
+                <div class="col-md-4 col-sm-10 form-col">
+                  <div class="card form-card form-outline">
+                    <label class="form-label" for="eid">Election ID</label>
+                    <input class="form-control" type="text" id="eid">
+                    <label for="sdate">Start Date</label>
+                    <input type="date" class="form-control" id="sdate">
+                    <label for="edate">End Date</label>
+                    <input type="date" class="form-control" id="edate">
+                    <div class="input-group d-flex justify-content-around">
+                      <!-- <div class="input-group-prepend"> -->
+                        <div class="input">
+                          <input name="type" type="radio" id="ls_radio">
+                          <label for="ls_radio">Lok Sabha</label>
+                        </div>
+                        <div class="input">
+                          <input name="type" type="radio" id="st_radio">
+                          <label for="st_radio">State Election</label>
+                        </div>
+                      <!-- </div> -->
+                      </div>
+                    <button class='btn btn-primary btn-block' onclick="submit()">CREATE</button>
+                  </div>
+                </div>
+                <div class="gutter col-md-1"></div>
+                <div class="table-responsive p-0 col-md-6 col-sm-10 align-self-begin">
+                  <div class="row form-col card">
+                    <button class="col-md-10 btn btn-primary btn-block" onclick="onGetElecList()">
+                      Get Elections List
+                    </button>
+                  </div>
+                  <div class="row table-wrapper-scroll-y">
+                    <table class="table align-items-center mb-0">
+                      <thead>
+                        <tr>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Election ID</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Start Date</th>
+                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">End Date</th>
+                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Type</th>
+                          <th class="text-secondary opacity-7"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="cand-table">
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
         </section>
     </main>
 </body>
