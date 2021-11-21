@@ -243,9 +243,13 @@ app.post("/constituency/create", async (req, res) => {
   //insert ls voters
   app.post("/voter/create/:eid", async (req, res) => {
     try {
+      const { eid } = req.params;
+      console.log(req.body)
+      console.log("select last_id from Lastid where table_name='voter_"+eid+"'")
       const lid= await pool.query(
-        "select last_id from Lastid where table_name =voter_"+eid
+        "select last_id from Lastid where table_name='voter_"+eid+"'"
       );
+      console.log('params')
       let nu=Number((lid.rows[0]['last_id']).substring(5,14));
       nu=nu+1;
       nu=String(nu);
@@ -259,17 +263,13 @@ app.post("/constituency/create", async (req, res) => {
       const { cid } = req.body;
       const { conid } = req.body;
       const { sconid } = req.body;
-      const { eid } = req.params;
-      // const lid2= await pool.query(
-      //   "update Lastid set last_id= $1 where table_name = Voter_"+eid,[id]
-      // );
       const lsvoter = await pool.query(
         "insert into Voter_"+eid+" (voter_id, dob , state, fname, lname, address, candidate_id, constituency_id, state_constituency_id) values ( $1,$2,$3,$4,$5,$6,$7,$8,$9)",
         [id,dob,state,fname,lname,address,cid,conid,sconid]
       
       );
   
-      res.json("Voted added successfully");
+      res.json("Voter added successfully");
     } catch (err) {
       console.error(err.message);
     }
