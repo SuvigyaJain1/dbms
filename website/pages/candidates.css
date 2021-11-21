@@ -25,7 +25,11 @@
     
     /* width: 600px; */
   }
-
+/* 
   .table-responsive{
     margin-top: 5% !important;
+  } */
+
+  .class-wrapper{
+    padding-top: 50px;
   }

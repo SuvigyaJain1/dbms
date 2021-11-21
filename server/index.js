@@ -236,6 +236,8 @@ app.post("/constituency/create", async (req, res) => {
     }
   });
 
+  
+
 
   //REMEMBER TO MAKE PROVISION TO ADD NEW ELECTION TABLES FOR FUTURE ELECTIONS AND MAKE COMMON ROUTE FOR ALL THE VOTER INSERTS
   //done!
@@ -249,12 +251,12 @@ app.post("/constituency/create", async (req, res) => {
       const lid= await pool.query(
         "select last_id from Lastid where table_name='voter_"+eid+"'"
       );
-      console.log('params')
+      console.log(lid)
       let nu=Number((lid.rows[0]['last_id']).substring(5,14));
       nu=nu+1;
       nu=String(nu);
       let zeros= "0".repeat(10-nu.length);
-      const id = 'booth_'+zeros+nu;
+      const id = 'vot_'+zeros+nu;
       const { dob } = req.body;
       const { state } = req.body;
       const { fname } = req.body;
@@ -269,7 +271,7 @@ app.post("/constituency/create", async (req, res) => {
       
       );
   
-      res.json("Voter added successfully");
+      res.json({id:id});
     } catch (err) {
       console.error(err.message);
     }
@@ -320,6 +322,16 @@ app.get("/voter/getList/:vlist", async (req, res) => {
   }
 });
 
+app.get("/getconst/:cid", async (req, res) => {
+  try {
+    const { cid } = req.params;
+    const voters = await pool.query(`select name from constituency where constituency_id='${cid}'`);
+    res.json(voters.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
 
 //-- Get voters list per constituency of ls or state
 
@@ -327,7 +339,7 @@ app.get("/voter/getList/:vlist/:cid", async (req, res) => {
   try {
     const { cid } = req.params;
     const { vlist } = req.params;
-    const todo = await pool.query("select voter_id, fname from "+vlist+" where state_constituency_id= $1 or constituency_id=$2", [cid,cid]);
+    const todo = await pool.query("select * from "+vlist+" where state_constituency_id= $1 or constituency_id=$2", [cid,cid]);
 
     res.json(todo.rows);
   } catch (err) {
